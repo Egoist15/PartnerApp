@@ -1,0 +1,39 @@
+<div class="about-you-container">
+    <h2>About you</h2>
+    <form [formGroup]="aboutYouForm" (ngSubmit)="onContinue()">
+      <label>Legal first name *</label>
+      <input formControlName="firstName" type="text" required />
+  
+      <label>Middle name (optional)</label>
+      <input formControlName="middleName" type="text" />
+  
+      <label>Legal last name *</label>
+      <input formControlName="lastName" type="text" required />
+  
+      <label>Suffix (optional)</label>
+      <select formControlName="suffix">
+        <option value="">Select</option>
+        <option value="Jr">Jr.</option>
+        <option value="Sr">Sr.</option>
+        <option value="II">II</option>
+        <option value="III">III</option>
+      </select>
+  
+      <label>Date of birth *</label>
+      <input formControlName="dob" type="date" required />
+  
+      <label>Citizenship *</label>
+      <select formControlName="citizenship">
+        <option value="">Select</option>
+        <option value="US">United States</option>
+        <option value="Other">Other</option>
+      </select>
+  
+      <label>Social Security number or ITIN *</label>
+      <input formControlName="ssn" type="text" required />
+  
+      <button type="submit" [disabled]="!aboutYouForm.valid">Continue</button>
+      <button type="button" (click)="cancelApplication()">Cancel application</button>
+    </form>
+  </div>
+  
