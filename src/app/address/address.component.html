@@ -1,0 +1,20 @@
+<div class="form-container">
+  <h2>Address Details</h2>
+  <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+    
+    <label>Street Address *</label>
+    <input type="text" formControlName="street" required />
+    
+    <label>City *</label>
+    <input type="text" formControlName="city" required />
+    
+    <label>State *</label>
+    <input type="text" formControlName="state" required />
+    
+    <label>Zip Code *</label>
+    <input type="text" formControlName="zipcode" required pattern="^\d{5}$" />
+    
+    <button type="submit">Continue</button>
+    <button type="button" (click)="cancelApplication()">Cancel application</button>
+  </form>
+</div>
