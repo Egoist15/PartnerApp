@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EligibilityService } from '../services/eligibility.service';
 
 @Component({
@@ -10,11 +10,15 @@ import { EligibilityService } from '../services/eligibility.service';
 })
 export class AddressComponent implements OnInit {
   addressForm: FormGroup;
+  productId: string = 'personal-loan'; // Default product ID
+
 
   constructor(
     private fb: FormBuilder,
     private eligibilityService: EligibilityService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
+
   ) {
     this.addressForm = this.fb.group({
       street: ['', Validators.required],
@@ -24,13 +28,18 @@ export class AddressComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      this.productId = params.get('productId') || 'personal-loan';
+    });
+  }
 
   onSubmit(): void {
     if (this.addressForm.valid) {
       let addressData = this.addressForm.value;
   
       const requestPayload = {
+        productId: this.productId,
         street: addressData.street,
         city: addressData.city,
         state: addressData.state,
@@ -39,11 +48,11 @@ export class AddressComponent implements OnInit {
   
       console.log('Address Payload:', requestPayload); 
   
-      this.eligibilityService.submitAddress(requestPayload).subscribe(
+      this.eligibilityService.submitAddress(requestPayload, this.productId).subscribe(
         (response) => {
           console.log('Response from backend:', response);
           if (response.status === "200 OK") {
-            this.router.navigate(['/proofVerification']);
+            this.router.navigate([`/${this.productId}/proof-verification`]);
           } else {
             alert(`Error: ${response.errorDescription || 'Unknown error'}`);
           }

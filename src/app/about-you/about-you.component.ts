@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { EligibilityService } from '../services/eligibility.service';
 import { format } from 'date-fns';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-about-you',
@@ -11,11 +11,15 @@ import { format } from 'date-fns';
 })
 export class AboutYouComponent implements OnInit {
   aboutYouForm: FormGroup;
+  productId: string = 'personal-loan';
+
 
   constructor(
     private fb: FormBuilder,
     private eligibilityService: EligibilityService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
+
   ) {
     this.aboutYouForm = this.fb.group({
       firstName: ['', Validators.required],
@@ -28,7 +32,11 @@ export class AboutYouComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      this.productId = params.get('productId') || 'personal-loan';
+   });
+  }
 
   onContinue(): void {
     if (this.aboutYouForm.valid) {
@@ -37,6 +45,7 @@ export class AboutYouComponent implements OnInit {
       const formattedDob = this.formatDate(formData.dob);
   
       const requestPayload = {
+        productId: this.productId,
         legalFirstName: formData.firstName,
         middleName: formData.middleName || null,
         legalLastName: formData.lastName,
@@ -48,12 +57,12 @@ export class AboutYouComponent implements OnInit {
   
       console.log('Final Payload:', requestPayload); 
   
-      this.eligibilityService.checkEligibility(requestPayload).subscribe(
+      this.eligibilityService.checkEligibility(requestPayload, this.productId).subscribe(
         (response) => {
           console.log('Response from backend:', response);
   
           if (response.status === "200 OK") {
-            this.router.navigate(['/address']);
+            this.router.navigate([`/${this.productId}/address`]);
           } else {
             alert(`Not eligible: ${response.errorDescription || 'Unknown error'}`);
           }
@@ -79,4 +88,4 @@ export class AboutYouComponent implements OnInit {
   cancelApplication(): void {
     this.aboutYouForm.reset();
   }
-} 
+}

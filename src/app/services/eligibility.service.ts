@@ -6,18 +6,17 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class EligibilityService {
-  private apiUrl = 'http://localhost:8081/partnerapp/aboutyou';
+  private baseUrl = 'http://localhost:8081';
 
   constructor(private http: HttpClient) {}
 
-  checkEligibility(payload: any): Observable<any> {
-    return this.http.post(this.apiUrl, payload, {
+  checkEligibility(payload: any, productId: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/${productId}/partnerapp/aboutyou`, payload, {  
       headers: { 'Content-Type': 'application/json' }
     });
   }
 
-  submitAddress(addressData: any): Observable<any> {
-    return this.http.post('http://localhost:8081/partnerapp/address', addressData);
-  }  
-  
+  submitAddress(addressData: any, productId: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/${productId}/partnerapp/address`, addressData);
+  }
 }

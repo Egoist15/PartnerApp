@@ -1,3 +1,4 @@
+
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AboutYouComponent } from './about-you/about-you.component';
@@ -5,12 +6,11 @@ import { AddressComponent } from './address/address.component';
 import { ProofVerificationComponent } from './proof-verification/proof-verification.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/about-you', pathMatch: 'full' },
-  { path: 'about-you', component: AboutYouComponent },
-  { path: 'address', component: AddressComponent },
-  { path: '', redirectTo: '/about-you', pathMatch: 'full' },
-  { path: 'proofVerification', component: ProofVerificationComponent },
-  { path: '**', redirectTo: 'proofVerification' }
+  { path: '', redirectTo: '/personal-loan/about-you', pathMatch: 'full' },
+  { path: ':productId/about-you', component: AboutYouComponent },
+  { path: ':productId/address', component: AddressComponent },
+  { path: ':productId/proof-verification', component: ProofVerificationComponent },
+  { path: '**', redirectTo: '/personal-loan/proof-verification' }
 ];
 
 @NgModule({
