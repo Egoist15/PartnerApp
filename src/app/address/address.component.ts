@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { EligibilityService } from '../services/eligibility.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
+
 
 @Component({
   selector: 'app-address',
@@ -10,17 +13,18 @@ import { EligibilityService } from '../services/eligibility.service';
 })
 export class AddressComponent implements OnInit {
   addressForm: FormGroup;
-  productId: string = 'personal-loan'; // Default product ID
+  productId: string = 'personal-loan';
 
 
   constructor(
     private fb: FormBuilder,
     private eligibilityService: EligibilityService,
     private router: Router,
-    private route: ActivatedRoute
+    private dialog: MatDialog
 
   ) {
     this.addressForm = this.fb.group({
+      productId: [this.productId, Validators.required],
       street: ['', Validators.required],
       city: ['', Validators.required],
       state: ['', Validators.required],
@@ -28,18 +32,14 @@ export class AddressComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      this.productId = params.get('productId') || 'personal-loan';
-    });
-  }
+  ngOnInit(): void {}
 
   onSubmit(): void {
     if (this.addressForm.valid) {
       let addressData = this.addressForm.value;
   
       const requestPayload = {
-        productId: this.productId,
+        productId: addressData.productId,
         street: addressData.street,
         city: addressData.city,
         state: addressData.state,
@@ -48,22 +48,20 @@ export class AddressComponent implements OnInit {
   
       console.log('Address Payload:', requestPayload); 
   
-      this.eligibilityService.submitAddress(requestPayload, this.productId).subscribe(
+      this.eligibilityService.submitAddress(requestPayload).subscribe(
         (response) => {
           console.log('Response from backend:', response);
           if (response.status === "200 OK") {
             this.router.navigate([`/${this.productId}/proof-verification`]);
           } else {
-            alert(`Error: ${response.errorDescription || 'Unknown error'}`);
-          }
+            this.showErrorDialog(response.errorDescription || 'Unknown error');          }
         },
         (error) => {
           console.error('Error:', error);
-          
-          if (error.error && error.error.status === "400") {
-            alert(`Error: ${error.error.errorDescription || 'Invalid Address'}`);
+          if (error.status === "400 BAD_REQUEST" && error.error) {
+            this.showErrorDialog(error.error.errorDescription);
           } else {
-            alert('Something went wrong. Please try again.');
+            this.showErrorDialog('Something went wrong. Please try again.');
           }
         }
       );
@@ -75,4 +73,35 @@ export class AddressComponent implements OnInit {
   cancelApplication(): void {
     this.addressForm.reset();
   }
+
+
+  showErrorDialog(message: string): void {
+    const dialogRef = this.dialog.open(ErrorDialogComponent, {
+      width: '900px',
+      height: '500px',
+      data: { message: "The address is outside the U.S." }
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === 'cancel' || result === 'retry') {
+        this.resetForm();
+      }
+    });
+  }
+
+  resetForm(): void {
+    this.addressForm.reset();
+  
+    this.addressForm.setValue({
+      productId: this.productId,
+      street: '',
+      city: '',
+      state: '',
+      zipcode: ''
+    });
+  
+    this.addressForm.markAsPristine();
+    this.addressForm.markAsUntouched();
+  }  
+
 }

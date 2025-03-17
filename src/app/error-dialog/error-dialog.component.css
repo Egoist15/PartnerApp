@@ -1,0 +1,64 @@
+.error-dialog {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    top: 10px;
+    text-align: center;
+  }
+  
+  .error-icon {
+    font-size: 14px;
+    color: red;
+    margin-right: 10px;
+  }
+  
+  .error-message {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .error-reason {
+    color: rgb(186, 4, 4);
+    margin-bottom: 20px;
+  }
+  
+  hr {
+    margin: 20px 0;
+    border: none;
+    border-top: 1px solid lightgray;
+  }
+  
+  .next-step {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .instruction {
+    color: gray;
+    margin-bottom: 30px;
+    max-width: 600px;
+    margin: 0 auto 30px auto;
+  }
+  
+  .actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+  
+  .cancel, .retry {
+    padding: 10px 30px;
+    width: 300px;
+    border: 1px solid black;
+    border-radius: 8px;
+    background-color: white;
+    cursor: pointer;
+  }
+  
+  .retry {
+    background-color: black;
+    color: white;
+  }
+  

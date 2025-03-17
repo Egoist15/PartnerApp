@@ -1,0 +1,19 @@
+<div class="error-dialog">
+    <h2>Our apologies</h2>
+    <p class="error-message">We can't proceed with your application</p>
+    <p class="error-reason">
+      <span class="error-icon">&#10060;</span> {{ data.message }}
+    </p>
+    <hr />
+    <p class="next-step">
+      How would you like to continue?
+    </p>
+    <p class="instruction">
+      Select 'Go back and retry' to update your selections or 'Cancel Application' to exit and restart. By exiting, you'll lose current progress.
+    </p>
+    <div class="actions">
+      <button class="cancel" (click)="onCancel()">Cancel Application</button>
+      <button class="retry" (click)="onRetry()">Go back and Retry</button>
+    </div>
+  </div>
+  
