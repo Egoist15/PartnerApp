@@ -7,19 +7,26 @@ import { AboutYouComponent } from './about-you/about-you.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AddressComponent } from './address/address.component';
 import { ProofVerificationComponent } from './proof-verification/proof-verification.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
+import { MatIconModule } from '@angular/material/icon';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     AboutYouComponent,
     AddressComponent,
-    ProofVerificationComponent
+    ProofVerificationComponent,
+    ErrorDialogComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule 
+    HttpClientModule,
+    MatDialogModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]
